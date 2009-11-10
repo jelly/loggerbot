@@ -31,13 +31,12 @@ import Prelude hiding (catch)
 -- Some User Settings
 server = "irc.freenode.org"
 port   = 6667
-chan   = "#test"
-nick   = "loggerbot"
-fileName = "/path/to/file.html"
+chan   = "#flood"
+nick   = "logger-bot"
+fileName = "/home/jelle/test.html"
 nickcolor = "#0000FF"
 msgcolor = "#FF0000"
 admin = "foo"
-time = getClockTime >>= toCalendarTime >>= return . (formatCalendarTime defaultTimeLocale "%c")
 
 --
 -- The 'Net' monad, a wrapper over IO, carrying the bot's immutable state.
@@ -117,7 +116,7 @@ listen :: Handle -> Net ()
 listen h = forever $ do
     s <- init `fmap` io (hGetLine h)
 
-    io $  time >>= appendFile fileName
+    io $ currentTime >>= logtoFile
     io $ logtoFile  (message s)
     io (putStrLn s)
     if ping s then pong s else eval (clean s) s
@@ -180,3 +179,5 @@ pretty td = join . intersperse " " . filter (not . null) . map f $
 --
 io :: IO a -> Net a
 io = liftIO
+
+currentTime = getClockTime >>= toCalendarTime >>= return . (formatCalendarTime defaultTimeLocale "%c")
