@@ -27,8 +27,9 @@ import Control.Concurrent
 import Text.Printf
 import Prelude hiding (catch)
 
-
+--
 -- Some User Settings
+--
 server = "irc.freenode.org"
 port   = 6667
 chan   = "#flood"
@@ -86,6 +87,9 @@ run = do
 getNick :: String -> String
 getNick = takeWhile (/= '!') . drop 1 
 
+--
+--returns true if argument is admin
+--
 isAdmin :: String -> Bool
 isAdmin s  
     | (getNick s) == admin  = True
@@ -97,13 +101,11 @@ isAdmin s
 msg :: String -> String 
 msg = drop 1 . dropWhile (/= ':') . drop 1 
 
-
 --
 --Make the log message, output it as html
 --
 message :: String -> String
 message s = printf " <b>-</b> <font color=%s>%s</font><b>:</b> %s</br>" nickcolor (getNick s) (msg s)
-
 
 --
 --Read the irc channel to a logfile
