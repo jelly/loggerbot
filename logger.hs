@@ -100,8 +100,10 @@ msg = drop 1 . dropWhile (/= ':') . drop 1
 
 --
 --Make the log message, output it as html
-message :: String  -> String
-message s  = "  <font color=" ++ nickcolor ++ ">" ++ (getNick s) ++ "</font> : <font color=" ++ msgcolor ++ ">" ++ (msg s) ++ "</font></br>"
+--
+message :: String -> String
+message s = printf " <b>-</b> <font color=%s>%s</font><b>:</b> %s</br>" nickcolor (getNick s) (msg s)
+
 
 --
 --Read the irc channel to a logfile
