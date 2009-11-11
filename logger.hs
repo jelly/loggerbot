@@ -136,6 +136,8 @@ listen h = forever $ do
 --
 eval :: String -> String -> Net ()
 eval     "@uptime"   _          = uptime >>= privmsg
+eval     "@source"   _          = privmsg "http://github.com/jelly/loggerbot" 
+eval     "@version"   _          = privmsg "version 0.1" 
 eval     "@quit"     nick          = if (isAdmin nick) then write "QUIT" ":Exiting" >> io (exitWith ExitSuccess) else return ()
 eval     _           _          = return () -- ignore everything else
 
