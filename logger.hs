@@ -110,8 +110,15 @@ message str = printf " - %s: %s" (getNick str) (msg str)
 --
 --Read the irc channel to a logfile
 --
-logtoFile :: String -> IO ()
-logtoFile str = appendFile fileName str
+logToFile :: String -> IO ()
+logToFile str = appendFile fileName str
+
+--
+--check if it's a PRIVMSG
+--
+isPrivmsg :: String -> Bool
+isPrivmsg str = "PRIVMSG"`isInfixOf` str
+
 
 --
 -- Process each line from the server
@@ -119,10 +126,12 @@ logtoFile str = appendFile fileName str
 listen :: Handle -> Net ()
 listen h = forever $ do
     s <- init `fmap` io (hGetLine h)
+    
+--io $ currentTime >>= logtoFile
+--    io $ logtoFile  (message s)
+    if isPrivmsg s then do { io $ currentTime >>= logToFile; io $ logToFile (message s) } else return ()
 
-    io $ currentTime >>= logtoFile
-    io $ logtoFile  (message s)
-    io (putStrLn s)
+--    io (putStrLn s)
     if ping s then pong s else eval (clean s) s
   where
     forever a = a >> forever a
