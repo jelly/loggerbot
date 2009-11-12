@@ -34,7 +34,7 @@ server = "irc.freenode.org"
 port   = 6667
 chan   = "#flood"
 nick   = "logger-bot"
-fileName = "/home/jelle/test.html"
+fileName = "/home/jelle/test.txt"
 nickcolor = "#0000FF"
 msgcolor = "#FF0000"
 admin = "foo"
@@ -105,7 +105,7 @@ msg = drop 1 . dropWhile (/= ':') . drop 1
 --Make the log message, output it as html
 --
 message :: String -> String
-message s = printf " <b>-</b> <font color=%s>%s</font><b>:</b> %s</br>" nickcolor (getNick s) (msg s)
+message str = printf " - %s: %s" (getNick str) (msg str)
 
 --
 --Read the irc channel to a logfile
@@ -136,9 +136,8 @@ listen h = forever $ do
 --
 eval :: String -> String -> Net ()
 eval     "@uptime"   _          = uptime >>= privmsg
-eval     "@source"   _          = privmsg "http://github.com/jelly/loggerbot" 
 eval     "@source"   _          = privmsg "http://mydomain.com/logs/log.html" 
-eval     "@version"   _          = privmsg "version 0.1" 
+eval     "@version"  _          = privmsg "version 0.1" 
 eval     "@quit"     nick          = if (isAdmin nick) then write "QUIT" ":Exiting" >> io (exitWith ExitSuccess) else return ()
 eval     _           _          = return () -- ignore everything else
 
